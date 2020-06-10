@@ -19,7 +19,7 @@ public class CustomScoreAdaptor extends RecyclerView.Adapter<CustomScoreViewHold
     private static final String FILENAME = "CustomScoreAdaptor.java";
     private static final String TAG = "Whack-A-Mole3.0!";
 
-    public CustomScoreAdaptor(UserData userdata){
+    public CustomScoreAdaptor(Main3Activity main3Activity, UserData userdata){
         /* Hint:
         This method takes in the data and readies it for processing.
          */

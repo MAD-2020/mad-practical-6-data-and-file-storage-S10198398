@@ -28,6 +28,9 @@ public class Main3Activity extends AppCompatActivity {
     private static final String FILENAME = "Main3Activity.java";
     private static final String TAG = "Whack-A-Mole3.0!";
 
+    MyDBHandler dbHandler = new MyDBHandler(this,null,null,1);
+    private Button exitBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,30 @@ public class Main3Activity extends AppCompatActivity {
 
         Log.v(TAG, FILENAME + ": Show level for User: "+ userName);
          */
+        exitBtn = (Button)findViewById(R.id.backToLoginBtn);
+        exitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Main3Activity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Intent getIntent = getIntent();
+        String username = getIntent.getStringExtra("Username");
+        //find the user
+        UserData name = dbHandler.findUser("Username");
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        //score adapter
+        CustomScoreAdaptor customScoreAdaptor = new CustomScoreAdaptor(this, name);
+        //layout manager
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        //recycler layout manager
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(customScoreAdaptor);
+        //log
+        Log.v(TAG, FILENAME + ": Show level for User: "+ username);
     }
 
     @Override
