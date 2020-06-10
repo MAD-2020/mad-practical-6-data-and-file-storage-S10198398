@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -27,6 +29,10 @@ public class Main2Activity extends AppCompatActivity {
     private static final String FILENAME = "Main2Activity.java";
     private static final String TAG = "Whack-A-Mole3.0!";
 
+    MyDBHandler dbHandler = new MyDBHandler(this,null,null,1);
+    private Button cancelBtn;
+    private Button createBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +49,51 @@ public class Main2Activity extends AppCompatActivity {
             Log.v(TAG, FILENAME + ": User already exist during new user creation!");
 
          */
+        cancelBtn = (Button)findViewById(R.id.cancelBtn);
+        createBtn = (Button)findViewById(R.id.createBtn);
+
+        createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText eUsername = findViewById(R.id.inputUser);
+                EditText ePassword = findViewById(R.id.inputPass);
+
+                ArrayList<Integer> levels = new ArrayList<>();
+                ArrayList<Integer> scoring = new ArrayList<>();
+                if (dbHandler.findUser(eUsername.getText().toString()) != null)
+                {
+                    Toast.makeText(Main2Activity.this,"User already exits during new user creation!",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    UserData userData = new UserData();
+                    userData.setMyUserName(eUsername.getText().toString());
+                    userData.setMyPassword(ePassword.getText().toString());
+                    for (int i =1; i<11; i++)
+                    {
+                        levels.add(i);
+                        scoring.add(0);
+                    }
+                    userData.setLevels(levels);
+                    userData.setScores(scoring);
+                    dbHandler.addUser(userData);
+
+                    Log.v(TAG, FILENAME + ": New user created successfully!");
+                    Toast.makeText(Main2Activity.this,"User Account created successfully!",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Main2Activity.this,MainActivity.class);
+                    startActivity(intent);
+                }
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Main2Activity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     protected void onStop() {
